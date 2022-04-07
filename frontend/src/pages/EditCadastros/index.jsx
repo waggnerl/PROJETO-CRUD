@@ -1,25 +1,52 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { get } from 'lodash'
-//import { isEmail, isInt, isFloat } from 'validator'
 import PropTypes from 'prop-types'
 import { toast } from 'react-toastify'
-//import { FaUserCircle, FaEdit } from 'react-icons/fa'
-//import { Link } from 'react-router-dom'
+
 
 import axios from '../../services/axios'
 import { Container } from '../../styles/GlobalStyles'
-import { Form, ProfilePicture, Title } from './styled'
+import { Form, Title } from './styled'
 
 
-export default function EditCadastro({ match, history }) {
+export default function EditCadastros({ match, history }) {
   const id = get(match, 'params.id', '')
 
   const [nome, setNome] = useState('')
   const [cpf, setCpf] = useState('')
-  const [inome, setINome] = useState([])
-  const [icpf, setICpf] = useState([])
-  
 
+  const [nome,setNome] = useState('')
+  const [cpf,setCpf] = useState('')
+
+
+  {
+    /* Inicio Envio de dados  */
+  }
+  const handleSubmit = async e => {
+    e.preventDefault()
+    try {
+
+      await axios.put(`/cadastro/${id}`, {
+        nome,
+        cpf,        
+      })
+      toast.success('Cadastro editado com sucesso!')
+      history.push('/')
+    } catch (err) {
+      const status = get(err, 'response.status', 0)
+      const data = get(err, 'response.data', {})
+      const errors = get(data, 'errors', [])
+
+      if (errors.length > 0) {
+        errors.map(error => toast.error(error))
+      } else {
+        toast.error('Erro desconhecido')
+      }
+    }
+  }
+  {
+    /*Final Envio de dados  */
+  }
 
   useEffect(() => {
     async function getData() {
@@ -67,15 +94,15 @@ export default function EditCadastro({ match, history }) {
   
       }
     }
-  
       {/* Fim Envio de dados  */}
   return (
     <Container>
       <Title>
-        Editar dados cadastrais
+        Alterar Dados
       </Title>
+
       <Form onSubmit={handleSubmit}>
-      <label>Nome:</label>
+      <label>Nome</label>
         <input
           type="text"
           value={nome}

@@ -1,89 +1,65 @@
-import React, { useState, useEffect } from 'react'
-//import { get } from 'lodash'
-//import { isInt } from 'validator'
+import React, { useState } from 'react'
+import { get } from 'lodash'
 
 import PropTypes from 'prop-types'
 import { toast } from 'react-toastify'
-import { useDispatch } from 'react-redux'
 
 import axios from '../../services/axios'
 import { Container, Titulo } from '../../styles/GlobalStyles'
 import { Form } from './styled'
 
 export default function RegisterCadastros({ history }) {
-
-  
-
-  useEffect(() => {
-
-  }, [])
-
-  const getSetores = async () => {
-    
+  const [nome, setNome] = useState('')
+  const [cpf, setCpf] = useState('')
+  {
+    /* Inicio Envio de dados  */
   }
-  const loadSetores = () => {
-    
+  const handleSubmit = async e => {
+    e.preventDefault()
+    try {
+      await axios.post('/cadastro', {
+        nome,
+        cpf,        
+      })
+      toast.success('Cadastro criado com sucesso!')
+      history.push('/')
+    } catch (err) {
+      const data = get(err, 'response.data', {})
+      const errors = get(data, 'errors', [])
+
+      if (errors.length > 0) {
+        errors.map(error => toast.error(error))
+      } else {
+        toast.error('Erro desconhecido')
+      }
+    }
   }
-
-  const loadTipos = () => {
-   
+  {
+    /* Fim Inicio Envio de dados  */
   }
-
-  const loadStatus = () => {
-   
-  }
-
-  
-
   return (
     <Container>
 
-      <Titulo></Titulo>
+      <Titulo>Registrar Cadastro</Titulo>
 
-      <Form >
+      <Form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Modelo"
+          placeholder="Nome"
+          onChange={e=>setNome(e.target.value)}
         />
         <input
           type="number"
-          placeholder="Patrimonio"
+          placeholder="CPF"
+          onChange={e=>setCpf(e.target.value)}
         />
-        <input
-          type="text"
-          placeholder="Numero de Série"
-        />
-        <div>
-          <select
-            class="form-select form-select- mb-3"
-          >
-            <option>Selecione um setor</option>
-            {}
-          </select>
-        </div>
-        <div>
-          <select
-            class="form-select form-select- mb-3"
-          >
-            <option>Selecione o tipo de papel que deseja</option>
-            {}
-          </select>
-        </div>
-        <div>
-          <select
-            class="form-select form-select- mb-3"
-          >
-            <option>Selecione Status do Equipamento</option>
-          </select>
-        </div>
-
+      
         <button type="submit">Enviar</button>
       </Form>
     </Container>
   )
 }
-//{ match, history }
+
 RegisterCadastros.propTypes = {
   history: PropTypes.shape([]).isRequired
 }
-//  match: PropTypes.shape({}).isRequired,
