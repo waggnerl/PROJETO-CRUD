@@ -1,102 +1,70 @@
-import React, { useState, useEffect } from 'react'
-//import { get } from 'lodash'
-//import { isEmail, isInt, isFloat } from 'validator'
+import React, { useState } from 'react'
+import { get } from 'lodash'
 import PropTypes from 'prop-types'
 import { toast } from 'react-toastify'
-//import { FaUserCircle, FaEdit } from 'react-icons/fa'
-//import { Link } from 'react-router-dom'
+
 
 import axios from '../../services/axios'
 import { Container } from '../../styles/GlobalStyles'
-import { Form, ProfilePicture, Title } from './styled'
+import { Form, Title } from './styled'
 
 
 export default function EditCadastros({ match, history }) {
+  const id = get(match, 'params.id', '')
 
+  const [nome,setNome] = useState('')
+  const [cpf,setCpf] = useState('')
 
-  useEffect(() => {
-    async function getData() {
-      
-  }})
-  {
-    /* Início extrair dados de setores */
-  }
-  const getSetores = async () => {
-   
-  }
-  {
-    /* Fim extrair dados de setores */
-  }
-  {
-    /* Início carregar dados de setores */
-  }
-  const loadSetores = () => {
-   
-  }
-  {
-    /* Fim carregar dados de setores */
-  }
-  {
-    /* Início carregar options select-setores */
-  }
-  const loadSetoresId = () => {
-    
-  }
-  {
-    /* Fim carregar options select-setores */
-  }
 
   {
     /* Inicio Envio de dados  */
   }
   const handleSubmit = async e => {
-    
-  }
+    e.preventDefault()
+    try {
 
+      await axios.put(`/cadastro/${id}`, {
+        nome,
+        cpf,        
+      })
+      toast.success('Cadastro editado com sucesso!')
+      history.push('/')
+    } catch (err) {
+      const status = get(err, 'response.status', 0)
+      const data = get(err, 'response.data', {})
+      const errors = get(data, 'errors', [])
+
+      if (errors.length > 0) {
+        errors.map(error => toast.error(error))
+      } else {
+        toast.error('Erro desconhecido')
+      }
+    }
+  }
+  {
+    /*Final Envio de dados  */
+  }
   return (
     <Container>
 
       <Title>
-        Impressora: {} <br /> Patrimonio: {}
+        Alterar Dados
       </Title>
 
-      <Form >
-        <div>
-          <label>Tipo:</label>
-          <select
-            class="form-select form-select- mb-3"
-          >
-            <option></option>
-            <option>Preto e Branco</option>
-            <option>Colorido</option>
-          </select>
-        </div>
-        <label>Patrimônio:</label>
-        <input
-          type="number"
-        />
-        <label>Número de Série:</label>
+      <Form onSubmit={handleSubmit}>
+      <label>Nome</label>
         <input
           type="text"
+          value={nome}
+          onChange={e => setNome(e.target.value)}
         />
-        <div>
-          <label>Setor:</label>
-          <select
-            class="form-select form-select- mb-3"
-          >
-          </select>
-        </div>
-        <div>
-          <label>Status:</label>
-          <select
-            class="form-select form-select- mb-3"
-          >
-            <option></option>
-            <option>Ativo</option>
-            <option>Inativo</option>
-          </select>
-        </div>
-
+        <label>CPF:</label>
+        <input
+          type="number"
+          value={cpf}
+          onChange={e => setCpf(e.target.value)}
+        />
+                
         <button type="submit">Enviar</button>
       </Form>
     </Container>
