@@ -20,6 +20,7 @@ export default function Routes() {
         path="/cadastro/:id/edit"
         component={EditCadastros}
       />
+      
       <Route path="*" component={Page404} />
     </Switch>
   )
