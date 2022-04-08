@@ -11,9 +11,6 @@ export default class Cadastros extends Model {
         cpf: {
           type: Sequelize.STRING,
           defaultValue: "",
-          unique: {
-            msg:"Cadastro já existe"
-          }
         }
       },
       {
