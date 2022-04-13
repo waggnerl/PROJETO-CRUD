@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -15,6 +16,7 @@ import PropTypes from 'prop-types'
 
 export default function ListaCadastros() {
   const [cadastro, setCadastro] = useState([])
+
   useEffect(() => {
     getCadastro()
   }, [])
@@ -22,29 +24,30 @@ export default function ListaCadastros() {
     /*Chamada Para Buscar Cadastro*/
   }
   const getCadastro = async () => {
-    await axios.get('./cadastro').then(res=>{
-      if(res.status === 200){
+    await axios.get('./cadastro').then(res => {
+      if (res.status === 200) {
         setCadastro(res.data)
       }
     })
-    .catch(e=>{
-      toast.error(
-        'Erro ao carregar Cadastros.'
-      )
-    })
+      .catch(e => {
+        toast.error(
+          'Erro ao carregar Cadastros.'
+        )
+      })
   }
   {
     /*Fim da Chamada Para Buscar Cadastro*/
   }
+
   {
     /* Chamada para listar dados de Cadastro */
   }
-  const handleDelete = async e => {
+  const handleDelete = async (e, id) => {
     e.preventDefault()
     try {
       await axios.delete(`/cadastro/${id}`)
       toast.success('Cadastro deletado com sucesso!')
-      history.push('/')
+      window.location.reload();
     } catch (err) {
       const data = get(err, 'response.data', {})
       const errors = get(data, 'errors', [])
@@ -90,16 +93,16 @@ export default function ListaCadastros() {
             })}
           </Td>
           <Td>
-          {cadastro.map(a => {
+            {cadastro.map(a => {
               if (a.id === lista.id)
                 return (
-            <Link onClick={handleDelete}>
-              <Tooltip title="Deletar Cadastro" placement="left-start">
-                <Delete size={16} />
-              </Tooltip>
-            </Link>            
-            )
-          })}
+                  <Link onClick={e => handleDelete(e, a.id)}>
+                    <Tooltip title="Deletar Cadastro" placement="left-start">
+                      <Delete size={16} />
+                    </Tooltip>
+                  </Link>
+                )
+            })}
           </Td>
         </tr>
       )
@@ -121,7 +124,7 @@ export default function ListaCadastros() {
                 <tr>
                   <Th></Th>
                   <Th>Nome</Th>
-                  <Th>CPF</Th>                  
+                  <Th>CPF</Th>
                   <Th></Th>
                 </tr>
               </thead>

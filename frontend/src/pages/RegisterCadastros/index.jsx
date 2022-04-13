@@ -23,7 +23,7 @@ export default function RegisterCadastros({ history }) {
       })
       toast.success('Cadastro criado com sucesso!')
       history.push('/')
-    } catch (err) {
+      } catch (err) {
       const data = get(err, 'response.data', {})
       const errors = get(data, 'errors', [])
 
